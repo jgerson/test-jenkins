@@ -1,74 +1,45 @@
+terraform {
+  required_version = ">= 0.11.13"
+}
+
 provider "aws" {
   region = "us-east-1"
 }
 
-variable "cidr_1" {
-  default = "10.100.20.1/32"
-}
-
-variable "cidr_2" {
-  default = "10.100.20.2/32"
-}
-
-variable "cidr_3" {
-  default = "10.100.20.7/32"
-}
-
-variable "cidr_4" {
-  default = "0.0.0.0/0"
-}
-
-module "nested" {
-  source = "./module"
-  cidr_1 = "${var.cidr_1}"
-  cidr_2 = "${var.cidr_2}"
-  cidr_3 = "${var.cidr_3}"
-  cidr_4 = "${var.cidr_4}"
-}
-
-resource "aws_security_group" "test_root" {
-  name        = "test_root"
-  description = "test"
-  vpc_id      = "vpc-0a8898bdcbdde208f"
+resource "aws_instance" "jray-demo-ec2" {
+  ami           		 = "ami-b374d5a5"
+  instance_type          = "t2.small"
+  vpc_security_group_ids = ["${aws_security_group.jray-demo-sg.id}"]
 
   tags {
-    name  = "webapp00"
+    Name = "TFE-VCS-example"
     owner = "jray@hashicorp.com"
-    ttl   = "-1"
+    ttl = "2"
   }
+}
 
-  egress {
-    description = "ps remote servers"
-    from_port   = 5985
-    to_port     = 5986
-    protocol    = "tcp"
-    cidr_blocks = ["${var.cidr_1}", "${var.cidr_2}"]
-    self        = false
-  }
+resource "aws_security_group" "jray-demo-sg" {
+    name = "jray-demo-sg"
+    description = "jray 22&8080 inbound ANY outbound"
+   
+    ingress {
+        from_port = 22
+        to_port = 22
+        protocol = "tcp"
+        cidr_blocks = ["172.16.0.0/16"]
+    }
+    
+    ingress {
+        from_port = 443
+        to_port = 443
+        protocol = "tcp"
+        cidr_blocks = ["172.16.0.0/16"]
+    }
 
-  egress {
-    description = "ntp servers"
-    from_port   = 123
-    to_port     = 123
-    protocol    = "udp"
-    cidr_blocks = ["${var.cidr_3}"]
-    self        = false
-  }
-
-  egress {
-    description = "mail servers"
-    from_port   = 25
-    to_port     = 25
-    protocol    = "tcp"
-    cidr_blocks = ["${var.cidr_3}"]
-    self        = false
-  }
-
-  ingress {
-    description = "internet facing lbs"
-    from_port   = 443
-    to_port     = 443
-    protocol    = "tcp"
-    cidr_blocks = ["${var.cidr_4}"]
-  }
+    egress {
+        from_port = 0
+        to_port = 0
+        protocol = "-1"
+        cidr_blocks = ["0.0.0.0/0"]
+    }
 }

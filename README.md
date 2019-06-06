@@ -1,3 +1,3 @@
-# test-case-0
+# test case: test jenkins
 - Jenkins Driven Run (API) of Terraform Enterprise
-- Jenkins File in /raygj/tfe-jenkins
+- Jenkins File located in https://github.com/raygj/tfe-jenkins
