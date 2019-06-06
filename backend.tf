@@ -4,7 +4,7 @@ terraform {
     organization = "GLIC"
 
     workspaces {
-      name = "test-case-1"
+      name = "test-case-0-jenkins"
     }
   }
 }
