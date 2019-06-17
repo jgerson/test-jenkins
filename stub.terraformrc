@@ -1,6 +1,6 @@
 # file must be named .terraformrc
 # file must be located in /home of user executing remote run
 # token should be user token from TFE
-credentials "jray-ptfe.hashidemos.io" {
+credentials "<TFE server name>" {
   token = "xxx.atlasv1.zzz"
 }
