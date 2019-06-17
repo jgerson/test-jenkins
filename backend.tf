@@ -1,10 +1,10 @@
 terraform {
   backend "remote" {
-    hostname     = "<TFE server name>"
-    organization = "<target TFE org name>"
+    hostname     = "jray-ptfe.hashidemos.io"
+    organization = "sandbox"
 
     workspaces {
-      name = "<target workspace name>"
+      name = "test-jenkins"
     }
   }
 }
