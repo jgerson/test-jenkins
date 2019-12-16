@@ -1,7 +1,7 @@
 terraform {
   backend "remote" {
-    hostname     = "jray-ptfe.hashidemos.io"
-    organization = "sandbox"
+    hostname     = "app.terraform.io"
+    organization = "jgersonorg1"
 
     workspaces {
       name = "test-jenkins"
